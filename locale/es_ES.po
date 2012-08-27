@@ -1,14 +1,6 @@
 # 
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: Raimon Esteve <resteve@zikzakmedia.com>\n"
-"Language-Team: \n"
-"MIME-Version: 1.0\n"
-"Content-Transfer-Encoding: 8bit\n"
+msgstr "Content-Type: text/plain; charset=utf-8\n"
 
 msgctxt "error:account.invoice:"
 msgid ""
@@ -31,4 +23,3 @@ msgstr ""
 "Las facturas de los proveedores siguientes disponen de información duplicada:\n"
 "\n"
 "%s"
-
