@@ -9,9 +9,17 @@ See INSTALL
 Support
 -------
 
-If you encounter any problems please use bitbucket bugtracker:
+For more information or if you encounter any problems with this module:
 
   https://bitbucket.org/albertnan/account_invoice_prevent_duplicates/issues
+
+If you encounter any problems with Tryton, please don't hesitate to ask
+questions on the Tryton bug tracker, mailing list, wiki or IRC channel:
+
+  http://bugs.tryton.org/
+  http://groups.tryton.org/
+  http://wiki.tryton.org/
+  irc://irc.freenode.net/tryton
 
 Documentation
 -------------
