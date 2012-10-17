@@ -37,6 +37,7 @@ class Invoice:
                 domain.append(('invoice_date', '=', invoice.invoice_date))
                 domain.append(('reference', '=', invoice.reference))
                 domain.append(('state', 'in', ('open','done')))
+                domain.append(('company', '=', invoice.company.id))
                 invoices = cls.search(domain)
                 if len(invoices) > 1:
                     language = Transaction().language
