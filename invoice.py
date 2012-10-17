@@ -3,27 +3,32 @@
 #the full copyright notices and license terms.
 from trytond.model import Workflow, ModelView, ModelSQL
 from trytond.transaction import Transaction
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 
+__all__ = ['Invoice']
+__metaclass__ = PoolMeta
 
-class Invoice(Workflow, ModelSQL, ModelView):
-    _name = 'account.invoice'
+class Invoice:
+    'Invoice'
+    __name__ = 'account.invoice'
 
-    def __init__(self):
-        super(Invoice, self).__init__()
-        self._error_messages.update({
+    @classmethod
+    def __setup__(cls):
+        super(Invoice, cls).__setup__()
+        cls._error_messages.update({
                 'duplicate_invoice': 'The following supplier invoices have '
                     'duplicated information:\n\n%s',
                 'party_invoice_reference': 'Invoice Number: %(number)s\n'\
-                    'Party: %(party)s\nInvoice Reference: %(reference)s\n\n'
+                    'Party: %(party)s\nInvoice Reference: %(reference)s\n'
                 })
 
-    def write(self, ids, vals):
-        res = super(Invoice, self).write(ids, vals)
+    @classmethod
+    def write(cls, invoices, vals):
+        res = super(Invoice, cls).write(invoices, vals)
         if vals.get('state') == 'open':
             pool = Pool()
-            translation_obj = pool.get('ir.translation')
-            for invoice in self.browse(ids):
+            Translation = pool.get('ir.translation')
+            for invoice in invoices:
                 if not invoice.type in ('in_invoice','in_credit_note'):
                     continue
                 domain = []
@@ -32,25 +37,22 @@ class Invoice(Workflow, ModelSQL, ModelView):
                 domain.append(('invoice_date', '=', invoice.invoice_date))
                 domain.append(('reference', '=', invoice.reference))
                 domain.append(('state', 'in', ('open','done')))
-                invoice_ids = self.search(domain)
-                if len(invoice_ids) > 1:
+                invoices = cls.search(domain)
+                if len(invoices) > 1:
                     language = Transaction().language
-                    error = self._error_messages['party_invoice_reference']
-                    message = translation_obj.get_source('account.invoice', 
+                    error = cls._error_messages['party_invoice_reference']
+                    message = Translation.get_source('account.invoice', 
                         'error', language, error)
                     if not message:
-                        message = translation_obj.get_source(error, 'error', language)
+                        message = Translation.get_source(error, 'error', language)
                     if message:
                         error = message
                     text = []
-                    for invoice in self.browse(invoice_ids):
+                    for invoice in cls.browse(invoices):
                         text.append(error % {
                                 'number': invoice.number or '',
                                 'party': invoice.party.name, 
                                 'reference': invoice.reference,
                                 })
                     text = '\n\n'.join( text )
-                    self.raise_user_error('duplicate_invoice', (text,))
-        return res
-
-Invoice()
+                    cls.raise_user_error('duplicate_invoice', (text,))
