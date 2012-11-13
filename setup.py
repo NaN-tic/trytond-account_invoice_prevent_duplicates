@@ -27,20 +27,20 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='trytond_account_invoice_prevent_duplicates',
+setup(name='trytonzz_account_invoice_prevent_duplicates',
     version=info.get('version', '0.0.1'),
     description='Account Invoice Prevent Duplicates',
     author='NaN·tic',
     author_email='info@NaN-tic.com',
     url='http://www.nan-tic.com',
-    download_url="https://bitbucket.org/albertnan/account_invoice_prevent_duplicates",
-    package_dir={'trytond.modules.account_invoice_prevent_duplicates': '.'},
+    download_url="https://bitbucket.org/zikzakmedia/trytonzz-account_invoice_prevent_duplicates",
+    package_dir={'trytonzz.modules.account_invoice_prevent_duplicates': '.'},
     packages=[
-        'trytond.modules.account_invoice_prevent_duplicates',
-        'trytond.modules.account_invoice_prevent_duplicates.tests',
+        'trytonzz.modules.account_invoice_prevent_duplicates',
+        'trytonzz.modules.account_invoice_prevent_duplicates.tests',
     ],
     package_data={
-        'trytond.modules.account_invoice_prevent_duplicates': info.get('xml', []) \
+        'trytonzz.modules.account_invoice_prevent_duplicates': info.get('xml', []) \
             + ['tryton.cfg', 'locale/*.po'],
     },
     classifiers=[
@@ -62,9 +62,9 @@ setup(name='trytond_account_invoice_prevent_duplicates',
     install_requires=requires,
     zip_safe=False,
     entry_points="""
-    [trytond.modules]
-    account_invoice_prevent_duplicates = trytond.modules.account_invoice_prevent_duplicates
+    [trytonzz.modules]
+    account_invoice_prevent_duplicates = trytonzz.modules.account_invoice_prevent_duplicates
     """,
     test_suite='tests',
-    test_loader='trytond.test_loader:Loader',
+    test_loader='trytonzz.test_loader:Loader',
 )
