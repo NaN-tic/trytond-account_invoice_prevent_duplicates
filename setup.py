@@ -27,13 +27,13 @@ for dep in info.get('depends', []):
 requires.append('trytond >= %s.%s, < %s.%s' %
         (major_version, minor_version, major_version, minor_version + 1))
 
-setup(name='trytonzz_account_invoice_prevent_duplicates',
+setup(name='nantic_account_invoice_prevent_duplicates',
     version=info.get('version', '0.0.1'),
     description='Account Invoice Prevent Duplicates',
     author='NaN·tic',
     author_email='info@NaN-tic.com',
     url='http://www.nan-tic.com',
-    download_url="https://bitbucket.org/zikzakmedia/trytond-account_invoice_prevent_duplicates",
+    download_url="https://bitbucket.org/trytonspain/trytond-account_invoice_prevent_duplicates",
     package_dir={'trytond.modules.account_invoice_prevent_duplicates': '.'},
     packages=[
         'trytond.modules.account_invoice_prevent_duplicates',
