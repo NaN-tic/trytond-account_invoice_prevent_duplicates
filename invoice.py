@@ -1,7 +1,6 @@
 #This file is part account_invoice_prevent_duplicates module for Tryton.
 #The COPYRIGHT file at the top level of this repository contains 
 #the full copyright notices and license terms.
-from trytond.model import Workflow, ModelView, ModelSQL
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 
@@ -16,15 +15,15 @@ class Invoice:
     def __setup__(cls):
         super(Invoice, cls).__setup__()
         cls._error_messages.update({
-                'duplicate_invoice': 'The following supplier invoices have '
-                    'duplicated information:\n\n%s',
-                'party_invoice_reference': 'Invoice Number: %(number)s\n'\
-                    'Party: %(party)s\nInvoice Reference: %(reference)s\n'
+                'duplicate_invoice': ('The following supplier invoices have '
+                    'duplicated information:\n\n%s'),
+                'party_invoice_reference': ('Invoice Number: %(number)s\n'
+                    'Party: %(party)s\nInvoice Reference: %(reference)s\n'),
                 })
 
     @classmethod
     def write(cls, invoices, vals):
-        res = super(Invoice, cls).write(invoices, vals)
+        super(Invoice, cls).write(invoices, vals)
         if vals.get('state') == 'open':
             pool = Pool()
             Translation = pool.get('ir.translation')
@@ -42,17 +41,18 @@ class Invoice:
                 if len(invoices) > 1:
                     language = Transaction().language
                     error = cls._error_messages['party_invoice_reference']
-                    message = Translation.get_source('account.invoice', 
+                    message = Translation.get_source('account.invoice',
                         'error', language, error)
                     if not message:
-                        message = Translation.get_source(error, 'error', language)
+                        message = Translation.get_source(error, 'error',
+                            language)
                     if message:
                         error = message
                     text = []
                     for invoice in cls.browse(invoices):
                         text.append(error % {
                                 'number': invoice.number or '',
-                                'party': invoice.party.name, 
+                                'party': invoice.party.name,
                                 'reference': invoice.reference,
                                 })
                     text = '\n\n'.join( text )
