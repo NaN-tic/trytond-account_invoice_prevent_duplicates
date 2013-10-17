@@ -17,7 +17,7 @@ class Invoice:
         cls._error_messages.update({
                 'duplicate_invoice': ('The following supplier invoices have '
                     'duplicated information:\n\n%s'),
-                'party_invoice_reference': ('Invoice Number: %(number)s\n'
+                'party_invoice_reference': ('Invoice: %(invoice)s\n'
                     'Party: %(party)s\nInvoice Reference: %(reference)s\n'),
                 })
 
@@ -51,7 +51,7 @@ class Invoice:
                     text = []
                     for invoice in cls.browse(invoices):
                         text.append(error % {
-                                'number': invoice.number or '',
+                                'invoice': invoice.rec_name or '',
                                 'party': invoice.party.name,
                                 'reference': invoice.reference,
                                 })
