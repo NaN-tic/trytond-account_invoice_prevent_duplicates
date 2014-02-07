@@ -24,7 +24,7 @@ class Invoice:
     @classmethod
     def write(cls, invoices, vals):
         super(Invoice, cls).write(invoices, vals)
-        if vals.get('state') == 'open':
+        if vals.get('state') == 'posted':
             pool = Pool()
             Translation = pool.get('ir.translation')
             for invoice in invoices:
@@ -35,7 +35,7 @@ class Invoice:
                 domain.append(('type', '=', invoice.type))
                 domain.append(('invoice_date', '=', invoice.invoice_date))
                 domain.append(('reference', '=', invoice.reference))
-                domain.append(('state', 'in', ('open','done')))
+                domain.append(('state', 'in', ('posted','paid')))
                 domain.append(('company', '=', invoice.company.id))
                 invoices = cls.search(domain)
                 if len(invoices) > 1:
