@@ -33,7 +33,7 @@ class Invoice:
         for invoices, values in zip(actions, actions):
             if values.get('state') == 'posted':
                 for invoice in invoices:
-                    if not invoice.type in ('in_invoice', 'in_credit_note'):
+                    if invoice.type != 'in':
                         continue
                     domain = []
                     domain.append(('party', '=', invoice.party.id))
