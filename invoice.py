@@ -1,5 +1,5 @@
 #This file is part account_invoice_prevent_duplicates module for Tryton.
-#The COPYRIGHT file at the top level of this repository contains 
+#The COPYRIGHT file at the top level of this repository contains
 #the full copyright notices and license terms.
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
@@ -42,8 +42,8 @@ class Invoice:
                     domain.append(('reference', '=', invoice.reference))
                     domain.append(('state', 'in', ('posted', 'paid')))
                     domain.append(('company', '=', invoice.company.id))
-                    invoices = cls.search(domain)
-                    if len(invoices) > 1:
+                    duplicated_invoices = cls.search(domain)
+                    if len(duplicated_invoices) > 1:
                         error = cls._error_messages['party_invoice_reference']
                         message = Translation.get_source('account.invoice',
                             'error', language, error)
@@ -53,7 +53,7 @@ class Invoice:
                         if message:
                             error = message
                         text = []
-                        for invoice in cls.browse(invoices):
+                        for invoice in duplicated_invoices:
                             text.append(error % {
                                     'invoice': invoice.rec_name or '',
                                     'party': invoice.party.name,
