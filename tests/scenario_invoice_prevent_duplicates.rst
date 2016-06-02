@@ -125,7 +125,7 @@ When posting the invoice an error is raised::
     >>> invoice.click('post')
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'The following supplier invoices have duplicated information:\n\nInvoice: 2 123 Party\nParty: Party\nInvoice Reference: 123\n\n\nInvoice: 1 123 Party\nParty: Party\nInvoice Reference: 123\n', ''))
+    UserError: ('UserError', (u'The following supplier invoices have duplicated information:\n\nInvoice: 2\nParty: Party\nInvoice Reference: 123\n\n\nInvoice: 1\nParty: Party\nInvoice Reference: 123\n', ''))
 
 If we change the reference no error is raised::
 
