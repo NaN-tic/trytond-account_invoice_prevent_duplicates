@@ -41,7 +41,8 @@ major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
 name = 'trytonspain_account_invoice_prevent_duplicates'
-download_url = 'https://bitbucket.org/trytonspain/trytond-account_invoice_prevent_duplicates'
+download_url = ('https://bitbucket.org/trytonspain/'
+    'trytond-account_invoice_prevent_duplicates')
 
 requires = []
 for dep in info.get('depends', []):
@@ -71,7 +72,8 @@ setup(name=name,
         'trytond.modules.account_invoice_prevent_duplicates.tests',
         ],
     package_data={
-        'trytond.modules.account_invoice_prevent_duplicates': (info.get('xml', [])
+        'trytond.modules.account_invoice_prevent_duplicates': (
+            info.get('xml', [])
             + ['tryton.cfg', 'view/*.xml', 'locale/*.po', '*.odt',
                 'icons/*.svg', 'tests/*.rst']),
         },
