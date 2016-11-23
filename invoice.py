@@ -30,6 +30,17 @@ class Invoice:
                     })
             cls.reference.depends.append('type')
 
+    @property
+    def duplicate_invoice_domain(self):
+        domain = []
+        domain.append(('party', '=', self.party.id))
+        domain.append(('type', '=', self.type))
+        domain.append(('invoice_date', '=', self.invoice_date))
+        domain.append(('reference', '=', self.reference))
+        domain.append(('state', 'in', ('posted', 'paid')))
+        domain.append(('company', '=', self.company.id))
+        return domain
+
     @classmethod
     def write(cls, *args):
         pool = Pool()
@@ -44,14 +55,8 @@ class Invoice:
                 for invoice in invoices:
                     if invoice.type != 'in':
                         continue
-                    domain = []
-                    domain.append(('party', '=', invoice.party.id))
-                    domain.append(('type', '=', invoice.type))
-                    domain.append(('invoice_date', '=', invoice.invoice_date))
-                    domain.append(('reference', '=', invoice.reference))
-                    domain.append(('state', 'in', ('posted', 'paid')))
-                    domain.append(('company', '=', invoice.company.id))
-                    duplicated_invoices = cls.search(domain)
+                    duplicated_invoices = cls.search(
+                        invoice.duplicate_invoice_domain)
                     if len(duplicated_invoices) > 1:
                         error = cls._error_messages['party_invoice_reference']
                         message = Translation.get_source('account.invoice',
