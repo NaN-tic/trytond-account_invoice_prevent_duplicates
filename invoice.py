@@ -3,6 +3,7 @@
 #the full copyright notices and license terms.
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval, Bool
 
 __all__ = ['Invoice']
 
@@ -20,6 +21,14 @@ class Invoice:
                 'party_invoice_reference': ('Invoice: %(invoice)s\n'
                     'Party: %(party)s\nInvoice Reference: %(reference)s\n'),
                 })
+        # Reference should be required to detect duplicates
+        if 'type' not in cls.reference.depends:
+            old_required = cls.reference.states.get('required', Bool(False))
+            cls.reference.states.update({
+                    'required': old_required | ((Eval('type') == 'in')
+                        & ~Eval('state').in_(['draft', 'cancel']))
+                    })
+            cls.reference.depends.append('type')
 
     @classmethod
     def write(cls, *args):

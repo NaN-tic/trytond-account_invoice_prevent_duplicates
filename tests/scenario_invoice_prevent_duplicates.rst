@@ -92,11 +92,18 @@ Create invoice::
     >>> invoice.party = party
     >>> invoice.payment_term = payment_term
     >>> invoice.invoice_date = today
-    >>> invoice.reference = '123'
     >>> line = invoice.lines.new()
     >>> line.product = product
     >>> line.quantity = 5
     >>> line.unit_price = Decimal('40')
+
+We can not create invoice without reference::
+
+    >>> invoice.click('post')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+        ...
+    UserError: ...
+    >>> invoice.reference = '123'
     >>> invoice.click('post')
 
 Create duplicated invoice::
