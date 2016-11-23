@@ -39,39 +39,37 @@ class Invoice:
         domain.append(('reference', '=', self.reference))
         domain.append(('state', 'in', ('posted', 'paid')))
         domain.append(('company', '=', self.company.id))
+        domain.append(('id', '!=', self.id))
         return domain
 
     @classmethod
-    def write(cls, *args):
+    def set_number(cls, invoices):
         pool = Pool()
         Translation = pool.get('ir.translation')
         language = Transaction().language
 
-        super(Invoice, cls).write(*args)
+        super(Invoice, cls).set_number(invoices)
 
-        actions = iter(args)
-        for invoices, values in zip(actions, actions):
-            if values.get('state') == 'posted':
-                for invoice in invoices:
-                    if invoice.type != 'in':
-                        continue
-                    duplicated_invoices = cls.search(
-                        invoice.duplicate_invoice_domain)
-                    if len(duplicated_invoices) > 1:
-                        error = cls._error_messages['party_invoice_reference']
-                        message = Translation.get_source('account.invoice',
-                            'error', language, error)
-                        if not message:
-                            message = Translation.get_source(error, 'error',
-                                language)
-                        if message:
-                            error = message
-                        text = []
-                        for invoice in duplicated_invoices:
-                            text.append(error % {
-                                    'invoice': invoice.rec_name or '',
-                                    'party': invoice.party.name,
-                                    'reference': invoice.reference,
-                                    })
-                        text = '\n\n'.join(text)
-                        cls.raise_user_error('duplicate_invoice', (text,))
+        for invoice in invoices:
+            if invoice.type != 'in':
+                continue
+            duplicated_invoices = cls.search(
+                invoice.duplicate_invoice_domain, limit=1)
+            if duplicated_invoices:
+                error = cls._error_messages['party_invoice_reference']
+                message = Translation.get_source('account.invoice',
+                    'error', language, error)
+                if not message:
+                    message = Translation.get_source(error, 'error',
+                        language)
+                if message:
+                    error = message
+                text = []
+                for invoice in [invoice] + duplicated_invoices:
+                    text.append(error % {
+                            'invoice': invoice.rec_name or '',
+                            'party': invoice.party.name,
+                            'reference': invoice.reference,
+                            })
+                text = '\n\n'.join(text)
+                cls.raise_user_error('duplicate_invoice', (text,))

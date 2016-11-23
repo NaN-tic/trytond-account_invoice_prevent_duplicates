@@ -120,6 +120,14 @@ Create duplicated invoice::
     >>> line.unit_price = Decimal('40')
     >>> invoice.save()
 
+When validating the invoice an error is raised::
+
+    >>> invoice.click('validate_invoice')
+    Traceback (most recent call last):
+        ...
+    UserError: ('UserError', (u'The following supplier invoices have duplicated information:\n\nInvoice: 2\nParty: Party\nInvoice Reference: 123\n\n\nInvoice: 1\nParty: Party\nInvoice Reference: 123\n', ''))
+
+
 When posting the invoice an error is raised::
 
     >>> invoice.click('post')
