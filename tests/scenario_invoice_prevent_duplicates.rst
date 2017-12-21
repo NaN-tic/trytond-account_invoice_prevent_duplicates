@@ -65,19 +65,18 @@ Create product::
     >>> unit, = ProductUom.find([('name', '=', 'Unit')])
     >>> ProductTemplate = Model.get('product.template')
     >>> Product = Model.get('product.product')
-    >>> product = Product()
     >>> template = ProductTemplate()
     >>> template.name = 'product'
     >>> template.default_uom = unit
     >>> template.type = 'service'
     >>> template.list_price = Decimal('40')
-    >>> template.cost_price = Decimal('25')
     >>> template.account_expense = expense
     >>> template.account_revenue = revenue
     >>> template.customer_taxes.append(tax)
+    >>> product, = template.products
+    >>> product.cost_price = Decimal('25')
     >>> template.save()
-    >>> product.template = template
-    >>> product.save()
+    >>> product, = template.products
 
 Create payment term::
 
@@ -122,7 +121,7 @@ Create duplicated invoice::
 
 When validating the invoice an error is raised::
 
-    >>> invoice.click('validate_invoice')
+    >>> invoice.click('validate_invoice')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
     UserError: ('UserError', (u'The following supplier invoices have duplicated information:\n\nInvoice: 2\nParty: Party\nInvoice Reference: 123\n\n\nInvoice: 1\nParty: Party\nInvoice Reference: 123\n', ''))
@@ -130,7 +129,7 @@ When validating the invoice an error is raised::
 
 When posting the invoice an error is raised::
 
-    >>> invoice.click('post')
+    >>> invoice.click('post')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
     UserError: ('UserError', (u'The following supplier invoices have duplicated information:\n\nInvoice: 2\nParty: Party\nInvoice Reference: 123\n\n\nInvoice: 1\nParty: Party\nInvoice Reference: 123\n', ''))
