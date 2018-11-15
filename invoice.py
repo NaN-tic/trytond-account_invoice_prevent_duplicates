@@ -36,6 +36,7 @@ class Invoice:
                     if not invoice.type in ('in_invoice', 'in_credit_note'):
                         continue
                     domain = []
+                    domain.append(('id', '!=', invoice.id))
                     domain.append(('party', '=', invoice.party.id))
                     domain.append(('type', '=', invoice.type))
                     domain.append(('invoice_date', '=', invoice.invoice_date))
@@ -43,7 +44,7 @@ class Invoice:
                     domain.append(('state', 'in', ('posted', 'paid')))
                     domain.append(('company', '=', invoice.company.id))
                     invoices = cls.search(domain)
-                    if len(invoices) > 1:
+                    if len(invoices) > 0:
                         error = cls._error_messages['party_invoice_reference']
                         message = Translation.get_source('account.invoice',
                             'error', language, error)
