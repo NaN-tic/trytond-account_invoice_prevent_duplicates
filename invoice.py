@@ -4,6 +4,9 @@
 from trytond.transaction import Transaction
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, Bool
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
+
 
 __all__ = ['Invoice']
 
@@ -14,12 +17,6 @@ class Invoice(metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Invoice, cls).__setup__()
-        cls._error_messages.update({
-                'duplicate_invoice': ('The following supplier invoices have '
-                    'duplicated information:\n\n%s'),
-                'party_invoice_reference': ('Invoice: %(invoice)s\n'
-                    'Party: %(party)s\nInvoice Reference: %(reference)s\n'),
-                })
         # Reference should be required to detect duplicates
         if 'type' not in cls.reference.depends:
             old_required = cls.reference.states.get('required', Bool(False))
@@ -55,12 +52,14 @@ class Invoice(metaclass=PoolMeta):
             duplicated_invoices = cls.search(
                 invoice.duplicate_invoice_domain, limit=1)
             if duplicated_invoices:
-                error = cls._error_messages['party_invoice_reference']
-                message = Translation.get_source('account.invoice',
-                    'error', language, error)
-                if not message:
-                    message = Translation.get_source(error, 'error',
-                        language)
+                message = gettext(
+                    'account_invoice_prevent_duplicates.party_invoice_reference',
+                    language=language)
+                # message = Translation.get_source('account.invoice',
+                #     'error', language, error)
+                # if not message:
+                #     message = Translation.get_source(error, 'error',
+                #         language)
                 if message:
                     error = message
                 text = []
@@ -71,4 +70,6 @@ class Invoice(metaclass=PoolMeta):
                             'reference': invoice.reference,
                             })
                 text = '\n\n'.join(text)
-                cls.raise_user_error('duplicate_invoice', (text,))
+                raise UserError(gettext(
+                    'account_invoice_prevent_duplicates.duplicate_invoice',
+                        message=text))

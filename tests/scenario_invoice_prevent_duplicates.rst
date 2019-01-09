@@ -108,7 +108,7 @@ We can not create invoice without reference::
     >>> invoice.click('post')  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ...
+    trytond.model.modelstorage.RequiredValidationError: ('UserError', ('A value is required for field "Reference" in "Invoice".', ''))
     >>> invoice.reference = '123'
     >>> invoice.click('post')
 
