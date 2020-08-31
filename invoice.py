@@ -19,7 +19,7 @@ class Invoice(metaclass=PoolMeta):
             old_required = cls.reference.states.get('required', Bool(False))
             cls.reference.states.update({
                     'required': old_required | ((Eval('type') == 'in')
-                        & ~Eval('state').in_(['draft', 'cancel']))
+                        & ~Eval('state').in_(['draft', 'cancelled']))
                     })
             cls.reference.depends.append('type')
 
