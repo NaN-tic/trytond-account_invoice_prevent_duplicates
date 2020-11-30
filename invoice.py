@@ -30,7 +30,7 @@ class Invoice(metaclass=PoolMeta):
         domain.append(('type', '=', self.type))
         domain.append(('invoice_date', '=', self.invoice_date))
         domain.append(('reference', '=', self.reference))
-        domain.append(('state', 'in', ('posted', 'paid')))
+        domain.append(('state', 'in', ('posted', 'paid', 'validated')))
         domain.append(('company', '=', self.company.id))
         domain.append(('id', '!=', self.id))
         return domain
