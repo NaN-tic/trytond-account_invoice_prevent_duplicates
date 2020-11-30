@@ -2,7 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 from trytond.transaction import Transaction
-from trytond.pool import Pool, PoolMeta
+from trytond.pool import PoolMeta
 from trytond.pyson import Eval, Bool
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
@@ -33,15 +33,13 @@ class Invoice(metaclass=PoolMeta):
         domain.append(('type', '=', self.type))
         domain.append(('invoice_date', '=', self.invoice_date))
         domain.append(('reference', '=', self.reference))
-        domain.append(('state', 'in', ('posted', 'paid')))
+        domain.append(('state', 'in', ('posted', 'paid', 'validated')))
         domain.append(('company', '=', self.company.id))
         domain.append(('id', '!=', self.id))
         return domain
 
     @classmethod
     def set_number(cls, invoices):
-        pool = Pool()
-        Translation = pool.get('ir.translation')
         language = Transaction().language
 
         super(Invoice, cls).set_number(invoices)
@@ -55,11 +53,6 @@ class Invoice(metaclass=PoolMeta):
                 message = gettext(
                     'account_invoice_prevent_duplicates.party_invoice_reference',
                     language=language)
-                # message = Translation.get_source('account.invoice',
-                #     'error', language, error)
-                # if not message:
-                #     message = Translation.get_source(error, 'error',
-                #         language)
                 if message:
                     error = message
                 text = []
