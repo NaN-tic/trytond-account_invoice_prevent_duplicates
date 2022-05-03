@@ -21,7 +21,7 @@ class Invoice(metaclass=PoolMeta):
                     'required': old_required | ((Eval('type') == 'in')
                         & ~Eval('state').in_(['draft', 'cancelled']))
                     })
-            cls.reference.depends.append('type')
+            cls.reference.depends.add('type')
 
     @property
     def duplicate_invoice_domain(self):
